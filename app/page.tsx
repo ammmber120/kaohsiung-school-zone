@@ -2,20 +2,66 @@
 
 import { useState } from "react";
 
+type SchoolResult = {
+  village: string;
+  neighborhood: string;
+  elementarySchool: string;
+  juniorHighSchool: string;
+};
+
 export default function Home() {
   const [address, setAddress] = useState("");
   const [submittedAddress, setSubmittedAddress] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [result, setResult] = useState<SchoolResult | null>(null);
+
+  const getMockResult = (inputAddress: string): SchoolResult => {
+    if (inputAddress.includes("三民區")) {
+      return {
+        village: "寶珠里",
+        neighborhood: "第 12 鄰",
+        elementarySchool: "光武國小",
+        juniorHighSchool: "陽明國中",
+      };
+    }
+
+    if (inputAddress.includes("左營區")) {
+      return {
+        village: "新上里",
+        neighborhood: "第 8 鄰",
+        elementarySchool: "新上國小",
+        juniorHighSchool: "龍華國中",
+      };
+    }
+
+    if (inputAddress.includes("鳳山區")) {
+      return {
+        village: "文華里",
+        neighborhood: "第 15 鄰",
+        elementarySchool: "文華國小",
+        juniorHighSchool: "青年國中",
+      };
+    }
+
+    return {
+      village: "尚未判定",
+      neighborhood: "尚未判定",
+      elementarySchool: "尚未判定",
+      juniorHighSchool: "尚未判定",
+    };
+  };
 
   const handleSearch = () => {
     if (!address.trim()) {
       setErrorMessage("請先輸入地址");
       setSubmittedAddress("");
+      setResult(null);
       return;
     }
 
     setErrorMessage("");
     setSubmittedAddress(address);
+    setResult(getMockResult(address));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -24,7 +70,7 @@ export default function Home() {
     }
   };
 
-  const hasResult = !!submittedAddress;
+  const hasResult = !!submittedAddress && !!result;
 
   return (
     <main className="min-h-screen bg-white px-6 py-12">
@@ -68,7 +114,7 @@ export default function Home() {
         <div className="mt-8 rounded-2xl border border-dashed border-gray-300 p-6">
           <h2 className="mb-4 text-xl font-semibold text-gray-900">查詢結果</h2>
 
-          {hasResult ? (
+          {hasResult && result ? (
             <div className="space-y-4">
               <div className="rounded-xl bg-gray-50 p-4">
                 <p className="text-sm text-gray-500">查詢地址</p>
@@ -81,28 +127,28 @@ export default function Home() {
                 <div className="rounded-xl border border-gray-200 p-4">
                   <p className="text-sm text-gray-500">所屬里別</p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">
-                    寶珠里
+                    {result.village}
                   </p>
                 </div>
 
                 <div className="rounded-xl border border-gray-200 p-4">
                   <p className="text-sm text-gray-500">所屬鄰別</p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">
-                    第 12 鄰
+                    {result.neighborhood}
                   </p>
                 </div>
 
                 <div className="rounded-xl border border-gray-200 p-4">
                   <p className="text-sm text-gray-500">國小學區</p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">
-                    光武國小
+                    {result.elementarySchool}
                   </p>
                 </div>
 
                 <div className="rounded-xl border border-gray-200 p-4">
                   <p className="text-sm text-gray-500">國中學區</p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">
-                    陽明國中
+                    {result.juniorHighSchool}
                   </p>
                 </div>
               </div>
