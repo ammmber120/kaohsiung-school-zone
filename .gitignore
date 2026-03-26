@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+data/kaohsiung-addresses.csv
+.env.local
+data/kaohsiung-addresses.csv
+data/chunks/
+data/chunks_mapped/
